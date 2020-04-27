@@ -1,6 +1,7 @@
 package access_token
 
 import (
+	"github.com/nhsh1997/bookstore_oauth-api/src/repository/rest"
 	"github.com/nhsh1997/bookstore_oauth-api/src/utils/errors"
 	"strings"
 )
@@ -42,11 +43,18 @@ func (s *service) GetById(accessTokenId string) (*AccessToken, *errors.RestError
 	return accessToken, nil
 }
 
-func (s *service) Create(at AccessToken) *errors.RestError {
-	if err := at.Validate(); err != nil {
-		return err
+func (s *service) Create(request AccessTokenRequest) ( *AccessToken, *errors.RestError) {
+	if err := request.Validate(); err != nil {
+		return nil, err
 	}
-	return s.repository.Create(at)
+
+	// Authenticate the user against the Users API:
+	//Generate a new access token
+	at := GetNewAccessToken()
+	//Save the new access token in Cassandra:
+
+
+	return &at, nil
 }
 
 func (s *service) UpdateExpirationTime( at AccessToken) *errors.RestError {
